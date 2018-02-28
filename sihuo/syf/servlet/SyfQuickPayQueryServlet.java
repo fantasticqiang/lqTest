@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import cn.phoneposp.dao.RWBankCardDAO;
+import cn.phoneposp.dao.SaruInfoDao;
+import cn.phoneposp.entity.RPscalecommission;
+import cn.phoneposp.entity.T0CashInfoNew;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.util.AmountUtil;
@@ -22,13 +27,6 @@ import com.syf.model.MerReportModel;
 import com.syf.util.Commons;
 import com.syf.util.HttpMsg;
 import com.syf.util.HttpUtil;
-import com.yufutong.dao.MerchantEnterDao;
-import com.yufutong.t0wuka.WKUnipayQueryT0;
-
-import cn.phoneposp.dao.RWBankCardDAO;
-import cn.phoneposp.dao.SaruInfoDao;
-import cn.phoneposp.entity.RPscalecommission;
-import cn.phoneposp.entity.T0CashInfoNew;
 
 /**
  * 闪云付查单
@@ -36,7 +34,7 @@ import cn.phoneposp.entity.T0CashInfoNew;
  */
 public class SyfQuickPayQueryServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(SyfQuickPayQueryServlet.class);
+	Logger logger = Logger.getLogger("DEFAULT-APPENDER");
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -48,8 +46,9 @@ public class SyfQuickPayQueryServlet extends HttpServlet{
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		//request.setCharacterEncoding("UTF-8");
-		logger.info("syf cha xun jie kou kai shi --------");
+		logger.info("syf cha xun jie kou 开始 --------");
 		String orderId = request.getParameter("orderId");// 订单号
+		logger.info("前端传过来的订单号:"+orderId);
 		// 根据订单号查询merId
 		SyfQuickPayDao merchantEnterDao = new SyfQuickPayDao();
 		String saruLruid = merchantEnterDao.selectSaruLruidByOrderId(orderId);
@@ -88,6 +87,7 @@ public class SyfQuickPayQueryServlet extends HttpServlet{
 		}
 		String url = SyfConstant.kj_url;
 		HttpMsg httpMsg = HttpUtil.postJson(url, reqMap);
+		logger.info("闪云付返回报文："+httpMsg.getResMsg());
 		try {
 			Commons.validate_decode(httpMsg, md5Key);
 		} catch (Exception e) {
@@ -106,6 +106,7 @@ public class SyfQuickPayQueryServlet extends HttpServlet{
 				SyfQuickPayDao merchantDao = new SyfQuickPayDao();
 				String orderStatus = saruInfo.getTradeStatusByOrderNo(orderNo);
 				if (orderStatus != null && "2".equals(orderStatus)) {
+					logger.info("此订单已经成功，已经成功更新交易表，插入T0表");
 					response.getWriter().write(new String(JSON.toJSONString(resultMap).getBytes("utf-8"),"utf-8"));
 					response.getWriter().flush();
 					response.getWriter().close();

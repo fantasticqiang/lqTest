@@ -29,7 +29,7 @@ public class SyfQuickPayDao {
 			String drawName, String cardNo, String bankName,
 			String reservedPhone, String bankNo, String bankAccountType,
 			String merPro, String regionId, String feeRate, String feeRate0,
-			String retCode, String retMsg,String business) {
+			String retCode, String retMsg,String business,String channelID) {
 
 		boolean flag = true;
 
@@ -37,8 +37,8 @@ public class SyfQuickPayDao {
 				+ "(SARULRU_ID,MER_NAME,MER_ID,PHONE,MER_STATUS,ID_CARD,"
 				+ "DRAW_NAME,CARD_NO,BANK_NAME,RESERVED_PHONE,BANK_NO,"
 				+ "BANK_ACCOUNT_TYPE,MER_PRO,REGION_ID,FEERATE,FEERATE0,"
-				+ "RET_CODE,RET_MSG,BUSINESS)"
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "RET_CODE,RET_MSG,BUSINESS,CHANNELID)"
+				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		Connection con = null;
 		PreparedStatement state = null;
@@ -66,6 +66,7 @@ public class SyfQuickPayDao {
 			state.setString(17, retCode);
 			state.setString(18, retMsg);
 			state.setString(19, business);
+			state.setString(20, channelID);
 
 			state.executeUpdate();
 			state.close();
@@ -756,6 +757,28 @@ public class SyfQuickPayDao {
 			ConnectionSource.close(con, res, state);
 		}
 		return merReportModel;
+	}
+	
+	/**
+	 * 手动修改商户状态
+	 */
+	public void modifyMerStatusByMan(String MER_ID,String MER_STATUS){
+		String sql = "update merchant_report SET MER_STATUS = ? where MER_ID = ?";
+		Connection con = null;
+		PreparedStatement state = null;
+		ResultSet res = null;
+		MerReportModel merReportModel = null;
+		try {
+			con = ConnectionSource.getConnection();
+			state = con.prepareStatement(sql);
+			state.setString(1, MER_ID);
+			state.setString(2, MER_STATUS);
+			res = state.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionSource.close(con, res, state);
+		}
 	}
 
 }

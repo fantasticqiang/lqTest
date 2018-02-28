@@ -28,7 +28,7 @@ public class SyfQuickPayMerRegisteServlet extends HttpServlet{
 	 * 商户报户接口
 	 */
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(SyfQuickPayMerRegisteServlet.class);
+	Logger logger = Logger.getLogger("DEFAULT-APPENDER");
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -158,13 +158,15 @@ public class SyfQuickPayMerRegisteServlet extends HttpServlet{
 				logger.info("获取到的key"+key);
 				resultMap.put("merId", merId);
 				resultMap.put("merId", key);
-				String merStatus = "S";
+				String merStatus = "I";//(I-正在处理，F-开户失败，S-开户成功)
+				//设置渠道标识：SYF
+				String channelID = "SYF";
 				String regionId = merchantDao.selectAreaCode(idCard.substring(0, 6));
 				merchantDao.insertMerchantAllMeaasge(saruLruid, contactorNm,
 						merId, reservedPhone, merStatus, idCard,
 						contactorNm, acctNo, acctBankname, reservedPhone,
 						bankNo, "1", "1", regionId, t0drawFee,
-						t0tradeRate, resCode, retMsg,key);
+						t0tradeRate, resCode, retMsg,key,channelID);
 			}else{
 				resultMap.put("retCode", resCode);
 				resultMap.put("retMsg", retMsg);

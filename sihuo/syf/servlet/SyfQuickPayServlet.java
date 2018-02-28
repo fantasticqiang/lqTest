@@ -36,7 +36,7 @@ import com.syf.util.HttpUtil;
  */
 public class SyfQuickPayServlet extends HttpServlet{
 
-	Logger logger = Logger.getLogger(SyfQuickPayServlet.class);
+	Logger logger = Logger.getLogger("DEFAULT-APPENDER");
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

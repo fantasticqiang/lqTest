@@ -36,7 +36,7 @@ import cn.phoneposp.entity.T0CashInfoNew;
 public class SyfQuickPayNotifyServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(SyfQuickPayNotifyServlet.class);
+	Logger logger = Logger.getLogger("DEFAULT-APPENDER");
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class SyfQuickPayNotifyServlet extends HttpServlet{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-type", "text/html;charset=UTF-8");
-		logger.info("(syf) notify kai shi ");
+		logger.info("(syf) notify 开始 ");
 		String payType = "freecardcredit";
 		String respString = "ERROR";
 		try {
@@ -74,7 +74,7 @@ public class SyfQuickPayNotifyServlet extends HttpServlet{
 			sign = Md5Util.string2MD5(signData);
 			if(!sign.equals(resJson.getString("signInfo"))){  //验签失败
 				System.out.println("闪云付异步通知验签失败");
-				logger.info("syf notify failed");
+				logger.info("闪云付异步通知验签失败");
 				return;
 			}
 			String merOrderNo = "";
@@ -90,6 +90,7 @@ public class SyfQuickPayNotifyServlet extends HttpServlet{
 				String orderStatus = saruInfo
 						.getTradeStatusByOrderNo(merOrderNo);
 				if (orderStatus != null && "2".equals(orderStatus)) {
+					logger.info("闪云付异步通知处理重复通知，订单号："+merOrderNo);
 					respString = "SUCCESS";
 					response.getWriter().write(respString);
 					response.getWriter().flush();
