@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.beeCloud.servlet.BeeCloudQuickPayRegisteServlet;
 import com.syf.servlet.SyfQuickPayMerRegisteServlet;
 
 public class QuickPayRegisteServlet extends HttpServlet{
@@ -28,6 +29,8 @@ public class QuickPayRegisteServlet extends HttpServlet{
 		String channelID = request.getParameter("channelID");
 		if("SYF".equals(channelID)){
 			new SyfQuickPayMerRegisteServlet().doPost(request, response);
+		}else if("BeeCloud".equals(channelID)){
+			new BeeCloudQuickPayRegisteServlet().doPost(request, response);
 		}
 	}
 }
