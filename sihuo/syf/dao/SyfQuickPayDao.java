@@ -704,7 +704,7 @@ public class SyfQuickPayDao {
 	 * 从商户报户表中，查询商户的merId和key
 	 */
 	public MerReportModel getMerReport(String SARULRU_ID){
-		String sql = "select MER_ID,BUSINESS from MERCHANT_REPORT where SARULRU_ID = ?";
+		String sql = "select MER_ID,BUSINESS from MERCHANT_REPORT where SARULRU_ID = ? and CHANNELID='SYF'";
 		Connection con = null;
 		PreparedStatement state = null;
 		ResultSet res = null;
@@ -767,13 +767,12 @@ public class SyfQuickPayDao {
 		Connection con = null;
 		PreparedStatement state = null;
 		ResultSet res = null;
-		MerReportModel merReportModel = null;
 		try {
 			con = ConnectionSource.getConnection();
 			state = con.prepareStatement(sql);
-			state.setString(1, MER_ID);
-			state.setString(2, MER_STATUS);
-			res = state.executeQuery();
+			state.setString(1, MER_STATUS);
+			state.setString(2, MER_ID);
+			int resultRow = state.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

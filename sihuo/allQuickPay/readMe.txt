@@ -35,3 +35,23 @@
 		<servlet-name>QuickPayServlet</servlet-name>
 		<url-pattern>/QuickPayServlet</url-pattern>
 	</servlet-mapping> 
+	
+	2.说明
+	
+	###手动修改商户状态--
+	方法名：QuickPayModifyMerStatusServlet
+	传入参数：channelID   （渠道ID,闪云付渠道ID:SYF）
+	传入参数：upMerID （上游分配的商户id，闪云付入驻商户后下发的id）
+	传入参数：status （商户状态，"I"处理中,"S"成功,"F"失败）
+	
+	###商户入驻
+	方法名：QuickPayRegisteServlet
+	传入参数：跟之前一样，但是需要多传一个参数，channelID   （渠道ID,闪云付渠道ID:SYF）
+	
+	###商户付款
+	方法名：QuickPayServlet
+	传入参数：跟之前一样，但是需要多传一个参数，channelID   （渠道ID,闪云付渠道ID:SYF）
+	
+	###查看某笔订单状态
+	方法名：QuickPayQueryServlet
+	传入参数：跟之前一样，但是需要多传一个参数，channelID   （渠道ID,闪云付渠道ID:SYF）
