@@ -91,3 +91,9 @@
 			JF：是否有积分（1有积分，0无积分）
 			JS_TYPE：结算类型（D0实时到账，T1第二天到账）
 			DESCRIPTION：描述交易额度限制（如：100-9000元每笔、单日五万元）
+			
+			
+	###样例
+	
+	###商户付款，beeCloud
+	QuickPayServlet

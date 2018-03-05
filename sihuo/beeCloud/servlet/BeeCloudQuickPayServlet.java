@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import cn.phoneposp.dao.SaruInfoDao;
+import cn.phoneposp.entity.CreditCardList;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,6 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.beeCloud.constant.BeeCloudConstant;
 import com.beeCloud.dao.BeeCloudPayDao;
 import com.beeCloud.model.MercantEnterInfo;
+import com.beeCloud.util.HttpClientUtils;
 import com.beeCloud.util.Md5Util;
 import com.interfaces.O110101.util.OrderNumUtil;
 import com.syf.util.HttpMsg;
@@ -48,11 +51,16 @@ public class BeeCloudQuickPayServlet extends HttpServlet{
 		doPost(request, response);
 	}
 
+	/*
+	 * 测试数据
+	 * http://localhost:8080/PhonePospInterface/QuickPayServlet?channelID=BeeCloud&saruLruid=6000002332&cardNo=6214830125502616&orderAmt=10000
+	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		// 从前台获取交易参数
 		String saruLruid = request.getParameter("saruLruid");// 刷卡商户的ID
+		String id = request.getParameter("id");// 信用卡表的id
 		String merId = request.getParameter("merId");// 报户生成的商户标识
 		String cardNoFromApp = request.getParameter("cardNo");// 交易卡号
 		String orderAmt = request.getParameter("orderAmt");// 订单金额，单位:分
@@ -62,64 +70,96 @@ public class BeeCloudQuickPayServlet extends HttpServlet{
 		String url = BeeCloudConstant.kj_url_registe;//快捷签约地址
 		String app_id = BeeCloudConstant.app_id;//上游平台下发的唯一标识
 		long timestamp = new Date().getTime();//时间戳
-		String str2sign = BeeCloudConstant.app_id+timestamp+BeeCloudConstant.app_secret;
-		String app_sign = "";//加密签名
-		try {
-			app_sign = Md5Util.string2MD5(str2sign);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		String channel = "BC_EXPRESS";//渠道类型 | 根据不同场景选择不同的支付方式
 		Integer total_fee = Integer.parseInt(orderAmt);//总金额
-		Integer id = SaruInfoDao.getSequence("SEQ_ORDER_NO");
+		Integer id_tmp = SaruInfoDao.getSequence("SEQ_ORDER_NO");
 		String bill_no = "";//商户订单号
-		bill_no = OrderNumUtil.createOrderNum(BeeCloudConstant.pre_fix, id);// 交易订单号
+		bill_no = OrderNumUtil.createOrderNum(BeeCloudConstant.pre_fix, id_tmp);// 交易订单号
 		String title = "线上支付";//订单标题
-		String optional = "";//附加数据
 		/*
 		 * 拼接optionJson
 		 */
 		BeeCloudPayDao beeCloudPayDao = new BeeCloudPayDao();
+		//获取信用卡信息
+		CreditCardList creditCard = beeCloudPayDao.getCreditCard(saruLruid, id);
 		MercantEnterInfo merchantInfo = beeCloudPayDao.queryMerchantBysaruId(saruLruid);
-		Map<String,String> optionalMap = new HashMap<String,String>();
 		String user_name = merchantInfo.getMerName();//姓名
 		String user_cert_no = merchantInfo.getIdCard();//用户身份证号
 		String user_mobile = merchantInfo.getPhone();//用户手机号
 		String fc_card_no = merchantInfo.getCardNo();//入金卡号，借记卡
-		String pay_bank_code = getBankCodeByCardNo(fc_card_no) == null ? getBankCodeByCardNo(fc_card_no):"";// 卡编码,付款
-		String in_bank_code = getBankCodeByCardNo(cardNoFromApp) == null ? getBankCodeByCardNo(cardNoFromApp):"";// 卡编码,入金、收款
-		String pay_bank_expiry_date = "0733"; //银行卡过期时间
-		String pay_bank_cvv2 = "567";//
+		String pay_bank_code = getBankCodeByCardNo(fc_card_no);// 卡编码,付款
+		String in_bank_code = getBankCodeByCardNo(cardNoFromApp);// 卡编码,入金、收款
+		String pay_bank_expiry_date = creditCard.getExpDate(); //银行卡过期时间
+		String pay_bank_cvv2 = creditCard.getCvv2();//安全码
 		String t0tradeRate = beeCloudPayDao.selectWKT0feeRate(saruLruid.substring(saruLruid.length() - 4));//t0交易费率
 		String user_rate = t0tradeRate;//费率
 		String user_fee = BeeCloudConstant.sxf;//手续费
-		optionalMap.put("user_name", user_name);
-		optionalMap.put("user_cert_no", user_cert_no);
-		optionalMap.put("user_mobile", user_mobile);
-		optionalMap.put("fc_card_no", fc_card_no);
-		optionalMap.put("pay_bank_code", pay_bank_code);
-		optionalMap.put("in_bank_code", in_bank_code);
-		optionalMap.put("pay_bank_expiry_date", pay_bank_expiry_date);
-		optionalMap.put("pay_bank_cvv2", pay_bank_cvv2);
-		optionalMap.put("user_rate", user_rate);
-		optionalMap.put("user_fee", user_fee);
 		
 		String notify_url = BeeCloudConstant.notif_yUrl;//异步通知地址
 		String card_no = cardNoFromApp;//支付银行卡号，信用卡
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("app_id", app_id);
-		params.put("timestamp", timestamp);
-		params.put("app_sign", app_sign);
-		params.put("channel", channel);
-		params.put("total_fee", total_fee);
-		params.put("bill_no", bill_no);
-		params.put("title", title);
-		params.put("optional", optionalMap);
-		params.put("notify_url", notify_url);
-		params.put("card_no", card_no);
 		
-		String resultStr = post2Server(BeeCloudConstant.kj_url_registe,params);
-		System.out.println();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("app_id", app_id);
+		map.put("timestamp", timestamp);
+		String str2sign = BeeCloudConstant.app_id+timestamp+BeeCloudConstant.app_secret; 
+		String string2md5 = "";
+		try {
+			string2md5 = Md5Util.string2MD5(str2sign);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		map.put("app_sign", string2md5);
+		map.put("channel", channel); // ALI_WEB BC_EXPRESS BC_GATEWAY BC_JD_QRCODE
+		map.put("bill_no", bill_no); // 20171130145830 yyyyMMddHHmmssSSS
+		map.put("total_fee", total_fee);
+		map.put("title", title);
+		map.put("notify_url", notify_url);
+		map.put("card_no", card_no); // 支付卡号
+		
+		Map<String, Object> optional = new HashMap<String, Object>();
+		optional.put("user_name", user_name);
+		optional.put("user_cert_no", user_cert_no);
+		optional.put("user_mobile", user_mobile);
+		optional.put("fc_card_no", fc_card_no);
+		optional.put("pay_bank_code", pay_bank_code);
+		optional.put("in_bank_code", in_bank_code);
+		optional.put("pay_bank_expiry_date", pay_bank_expiry_date);
+		optional.put("pay_bank_cvv2", pay_bank_cvv2);
+		optional.put("user_rate", user_rate);
+		optional.put("user_fee", user_fee);
+		map.put("optional", optional);
+		
+		String resultStr = null;
+		try {
+			logger.info("请求参数："+JSON.toJSONString(map));
+			resultStr = HttpClientUtils.postJsonParameters(url, JSON.toJSONString(map));
+			logger.info("返回结果："+resultStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//解析返回结果
+		JSONObject resultJson = JSON.parseObject(resultStr);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		String resCode = "";
+		String retMsg = "";
+		String syid = "";
+		if("0".equals(resultJson.getString("result_code")) && "OK".equals(resultJson.getString("result_msg"))){
+			logger.info("beecloud 下单成功");
+			resCode = "0000";
+			retMsg = "下单成功";
+			syid = resultJson.getString("id");
+		}else{
+			resCode = "0001";
+			retMsg = resultJson.getString("errMsg");
+		}
+		resultMap.put("resCode", resCode);
+		resultMap.put("retMsg", retMsg);
+		resultMap.put("syid", syid);
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		out.println(JSON.toJSONString(resultMap));
+		out.flush();
+		out.close();
 	}
 	
 	String encoding = "utf-8";
@@ -148,7 +188,7 @@ public class BeeCloudQuickPayServlet extends HttpServlet{
 			// POST请求
 			outputStream = conn.getOutputStream();
 			outputStreamWriter = new DataOutputStream(outputStream);
-			outputStreamWriter.write(JSON.toJSONString(params).getBytes());
+			outputStreamWriter.writeBytes(JSON.toJSONString(params));
 			outputStreamWriter.flush();
 			// 读取响应
 			inputStream = conn.getInputStream();
