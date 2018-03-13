@@ -664,7 +664,7 @@ public class BeeCloudPayDao {
 	}
 
 	public CreditCardList getCreditCard(String saruLruid, String id) {
-		String sql = "select SARU_LRUID,PHONE,CVV2,CARD_NUM,EXP_DATE,CREATE_DATE,SARU_BANKLINKED,SARU_ACCOUNTNAME,ID,SARU_BANKNAME from CREDIT_CARD_LIST where SARU_LRUID = ?  and ID=?";
+		String sql = "select SARU_LRUID,PHONE,CVV2,CARD_NUM,EXP_DATE,CREATE_DATE,SARU_BANKLINKED,SARU_ACCOUNTNAME,ID from CREDIT_CARD_LIST where SARU_LRUID = ?  and ID=?";
 		Connection con = null;
 		PreparedStatement state = null;
 		ResultSet set = null;
@@ -688,7 +688,6 @@ public class BeeCloudPayDao {
 				creditCard.setSaruBankLinked(set.getString(7));
 				creditCard.setSaruAccountName(set.getString(8));
 				creditCard.setId(set.getInt(9));
-				creditCard.setBankName(set.getString(10));
 			}
 			return creditCard;
 		} catch (SQLException e) {

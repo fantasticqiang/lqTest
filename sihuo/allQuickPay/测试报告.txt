@@ -1,0 +1,43 @@
+### beeCloud老罗商旅
+
+#测试报户
+	方法：QuickPayRegisteServlet
+	请求参数：
+	channelID=BeeCloud //渠道类型
+	saruLruid=6000002333 //系统用户id
+	reservedPhone=18611539891 //结算卡绑定的手机号
+	idCard=210421198707024217 //身份证号
+	cardNo=6217710708401146 //结算卡卡号
+	
+	示例：http://localhost:8080/PhonePospInterface/QuickPayRegisteServlet?channelID=BeeCloud&saruLruid=6000002333&reservedPhone=18611539891&idCard=210421198707024217&cardNo=6217710708401146
+	
+	本接口响应：{"retCode":"0000","retMsg":"报户成功"}
+	
+#测试付款
+	方法：QuickPayServlet
+	请求参数：
+	channelID=BeeCloud //渠道类型
+	saruLruid=6000002335 //系统用户id
+	id=848 //信用卡表的id
+	merId="" //因为这个渠道不会下发渠道商户号，所以为空
+	cardNo=6221682295594274 //往这个储蓄卡里出钱
+	orderAmt=10000 //出款金额100元
+	
+	示例：http://localhost:8080/PhonePospInterface/QuickPayConfirmServlet?channelID=BeeCloud&syid=03a80f9b-a9ac-4a0a-be1a-756f7029debd&verify_code=821937
+	
+	渠道响应：{"result_msg":"OK","err_detail":"","resultCode":0,"errMsg":"OK:","result_code":0,"id":"03a80f9b-a9ac-4a0a-be1a-756f7029debd"}
+	本接口响应：{"resCode":"0000","resMsg":"下单成功","syid":"03a80f9b-a9ac-4a0a-be1a-756f7029debd"}
+	
+#测试确认
+	方法：QuickPayConfirmServlet
+	请求参数：
+	channelID=BeeCloud //渠道类型
+	syid=d559f497-a685-4541-8317-a723c04a92d5  //上游下发的订单id
+	verify_code=234490 //手机收到的验证码
+	
+	示例：http://localhost:8080/PhonePospInterface/QuickPayConfirmServlet?channelID=BeeCloud&syid=388c936d-7f3b-430d-9b69-bbf858ea5147&verify_code=655540
+	
+	渠道响应：{"result_msg":"OK","err_detail":"","resultCode":0,"errMsg":"OK:","result_code":0}
+	本接口响应：{"resCode":"0000","resMsg":"付款提交成功"}
+		
+	

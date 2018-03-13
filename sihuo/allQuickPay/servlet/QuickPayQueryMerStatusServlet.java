@@ -40,8 +40,9 @@ public class QuickPayQueryMerStatusServlet extends HttpServlet{
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		String saruLruid = request.getParameter("saruLruid");// 用户id
+		String channelID = request.getParameter("channelID");// 用户id
 		
-		String sql = "select ID,SARULRU_ID,MER_ID,MER_STATUS from MERCHANT_REPORT where SARULRU_ID = ?";
+		String sql = "select ID,SARULRU_ID,MER_ID,MER_STATUS from MERCHANT_REPORT where SARULRU_ID = ? and channelID = ?";
 
 		Connection con = null;
 		PreparedStatement state = null;
@@ -51,6 +52,7 @@ public class QuickPayQueryMerStatusServlet extends HttpServlet{
 			con = ConnectionSource.getConnection();
 			state = con.prepareStatement(sql);
 			state.setString(1, saruLruid);
+			state.setString(2, channelID);
 			res = state.executeQuery();
 			/*
 			 * con = ConnectionSource.getConnection();

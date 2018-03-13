@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.beeCloud.servlet.BeeCloudQuickPayConfirmServlet;
 import com.beeCloud.servlet.BeeCloudQuickPayRegisteServlet;
-import com.syf.servlet.SyfQuickPayMerRegisteServlet;
 
-public class QuickPayRegisteServlet extends HttpServlet{
+public class QuickPayConfirmServlet extends HttpServlet{
+
 	/**
-	 * 商户总的  报户接口
+	 * 总的，商户确认的接口
 	 */
 	private static final long serialVersionUID = 1L;
 	Logger logger = Logger.getLogger("DEFAULT-APPENDER");
@@ -26,11 +27,9 @@ public class QuickPayRegisteServlet extends HttpServlet{
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String channelID = request.getParameter("channelID");
-		if("SYF".equals(channelID)){
-			new SyfQuickPayMerRegisteServlet().doPost(request, response);
-		}else if("BeeCloud".equals(channelID)){
-			new BeeCloudQuickPayRegisteServlet().doPost(request, response);
+		String channelID = request.getParameter("channelID");//渠道标识
+		if("BeeCloud".equals(channelID)){
+			new BeeCloudQuickPayConfirmServlet().doPost(request, response);
 		}
 	}
 }

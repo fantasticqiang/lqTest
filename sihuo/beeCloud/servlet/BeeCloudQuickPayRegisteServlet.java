@@ -63,15 +63,15 @@ public class BeeCloudQuickPayRegisteServlet extends HttpServlet{
 			//设置渠道标识：SYF
 			String channelID = "BeeCloud";
 			String regionId = merchantDao.selectAreaCode(idCard.substring(0, 6));
+			retCode = "0000";
+			retMsg = "报户成功";
 			merchantDao.insertMerchantAllMeaasge(saruLruid, contactorNm,
 					"", reservedPhone, merStatus, idCard,
 					contactorNm, cardNo, acctBankname, reservedPhone,
 					bankNo, "1", "1", regionId, t0drawFee,
-					t0tradeRate, "0000", "","",channelID);
-			retCode = "0000";
-			retMsg = "报户成功";
-			resultMap.put("retCode", retCode);
-			resultMap.put("retMsg", retMsg);
+					t0tradeRate, retCode, retMsg,"",channelID);
+			resultMap.put("resCode", retCode);
+			resultMap.put("resMsg", retMsg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

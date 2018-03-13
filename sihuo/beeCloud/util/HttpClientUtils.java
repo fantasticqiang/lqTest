@@ -333,7 +333,7 @@ public class HttpClientUtils {
     	 * {"app_id":"04538d30-5f17-478b-b4bd-f335a2cdbe51","app_sign":"425aa2d90a63bb7b0bee776f49c6262d","bill_no":"BeeCloud193641309347","card_no":"6225758212103831","channel":"BC_EXPRESS","notify_url":"http://47.104.91.166/PhonePospInterface/BeeCloudPayNotifyServlet","optional":{"fc_card_no":"6214830125502616","in_bank_code":"308","pay_bank_code":"308","pay_bank_cvv2":"709","pay_bank_expiry_date":"0322","user_cert_no":"110101198702201514","user_fee":"20","user_mobile":"18330219446","user_name":"董海龙","user_rate":"0.0060"},"return_url":"https://www.baidu.com","timestamp":1520227504598,"title":"线上支付","total_fee":300000}
     	 */
     	//testPay();
-    	testPay();
+    	testPay2();
     	/*
     	 * {"app_id":"04538d30-5f17-478b-b4bd-f335a2cdbe51","app_sign":"5aa75dc3cfed763df4c702532ababf76","bill_no":"BeeCloud193641309347","card_no":"6225758212103831","channel":"BC_EXPRESS","notify_url":"http://47.104.91.166/PhonePospInterface/BeeCloudPayNotifyServlet","optional":{"fc_card_no":"6214830125502616","in_bank_code":"308","pay_bank_code":"308","pay_bank_cvv2":"709","pay_bank_expiry_date":"0322","user_cert_no":"110101198702201514","user_fee":"80","user_mobile":"15601205173","user_name":"董海龙","user_rate":"0.0060"},"return_url":"https://www.baidu.com","timestamp":1520227360356,"title":"线上支付","total_fee":300000}
     	 */
@@ -360,17 +360,17 @@ public class HttpClientUtils {
     		map.put("title", "线上支付");
     		map.put("return_url", "https://www.baidu.com");
     		map.put("notify_url", "http://47.104.91.166/PhonePospInterface/BeeCloudPayNotifyServlet");
-    		map.put("card_no", "6259588986765243"); // 支付卡号,信用卡
+    		map.put("card_no", "6225758212103831"); // 支付卡号,信用卡
     		
     		Map<String, Object> optional = new HashMap<String, Object>();
-    		optional.put("user_name", "沈日月");
-    		optional.put("user_cert_no", "210421198707024217");
-    		optional.put("user_mobile", "18611539891");
-    		optional.put("fc_card_no", "6214920205433285");//储蓄卡
-    		optional.put("pay_bank_code", "310");
-    		optional.put("in_bank_code", "310");
-    		optional.put("pay_bank_expiry_date", "0322");
-    		optional.put("pay_bank_cvv2", "713");
+    		optional.put("user_name", "董海龙");
+    		optional.put("user_cert_no", "110101198702201514");
+    		optional.put("user_mobile", "15601205173");
+    		optional.put("fc_card_no", "6214830125502616");//储蓄卡
+    		optional.put("pay_bank_code", "308");
+    		optional.put("in_bank_code", "308");
+    		optional.put("pay_bank_expiry_date", "1121");
+    		optional.put("pay_bank_cvv2", "532");
     		optional.put("user_rate", "0.0060");
     		optional.put("user_fee", "20");
     		map.put("optional", optional);
@@ -392,39 +392,7 @@ public class HttpClientUtils {
 		String url = "https://api.beecloud.cn/2/rest/bill";
 		String res = null;
 		
-		try {
-/*			Map<String, Object> map = new HashMap<String, Object>();
-    		Date now = new Date();
-    		map.put("app_id", app_id);
-    		long time = now.getTime();
-    		map.put("timestamp", time);
-    		String str2sign = BeeCloudConstant.app_id+time+BeeCloudConstant.app_secret; 
-    		String string2md5 = Md5Util.string2MD5(str2sign);
-    		map.put("app_sign", string2md5);
-    		map.put("channel", "BC_EXPRESS"); // ALI_WEB BC_EXPRESS BC_GATEWAY BC_JD_QRCODE
-    		map.put("bill_no", "BeeCloud193641309347"); // 20171130145830 yyyyMMddHHmmssSSS
-    		map.put("total_fee", 300000);
-    		map.put("title", "线上支付");
-    		map.put("return_url", "https://www.baidu.com");
-    		map.put("notify_url", "http://47.104.91.166/PhonePospInterface/BeeCloudPayNotifyServlet");
-    		map.put("card_no", "6225758212103831"); // 支付卡号
-    		
-    		Map<String, Object> optional = new HashMap<String, Object>();
-    		optional.put("user_name", "董海龙");
-    		optional.put("user_cert_no", "110101198702201514");
-    		optional.put("user_mobile", "18330219446");
-    		optional.put("fc_card_no", "6214830125502616");
-    		optional.put("pay_bank_code", "308");
-    		optional.put("in_bank_code", "308");
-    		optional.put("pay_bank_expiry_date", "0322");
-    		optional.put("pay_bank_cvv2", "709");
-    		optional.put("user_rate", "0.0060");
-    		optional.put("user_fee", "20");
-    		map.put("optional", optional);
-    		System.out.println("请求参数："+JSON.toJSONString(map));
-            res = HttpClientUtils.postJsonParameters(url, JSON.toJSONString(map));
-            System.out.println("返回结果："+res);*/
-			
+		try {	
 			Map<String, Object> map = new HashMap<String, Object>();
     		Date now = new Date();
     		map.put("app_id", app_id);
@@ -439,17 +407,17 @@ public class HttpClientUtils {
     		map.put("title", "线上支付");
     		map.put("return_url", "https://www.baidu.com");
     		map.put("notify_url", "http://47.104.91.166/PhonePospInterface/BeeCloudPayNotifyServlet");
-    		map.put("card_no", "6225758212103831"); // 支付卡号
+    		map.put("card_no", "6221682295594274"); // 支付卡号
     		
     		Map<String, Object> optional = new HashMap<String, Object>();
-    		optional.put("user_name", "董海龙");
-    		optional.put("user_cert_no", "110101198702201514");
-    		optional.put("user_mobile", "18330219446");
-    		optional.put("fc_card_no", "6214830125502616");
-    		optional.put("pay_bank_code", "308");
-    		optional.put("in_bank_code", "308");
-    		optional.put("pay_bank_expiry_date", "0322");
-    		optional.put("pay_bank_cvv2", "709");
+    		optional.put("user_name", "沈日月");
+    		optional.put("user_cert_no", "210421198707024217");
+    		optional.put("user_mobile", "18611539891");
+    		optional.put("fc_card_no", "6217710708401146");//储蓄卡
+    		optional.put("pay_bank_code", "105");
+    		optional.put("in_bank_code", "302");
+    		optional.put("pay_bank_expiry_date", "0623");
+    		optional.put("pay_bank_cvv2", "193");
     		optional.put("user_rate", "0.0060");
     		optional.put("user_fee", "20");
     		map.put("optional", optional);
@@ -457,15 +425,6 @@ public class HttpClientUtils {
             res = HttpClientUtils.postJsonParameters(url, JSON.toJSONString(map));
             System.out.println("返回结果："+res);
 			
-			String resultStr = null;
-			try {
-				System.out.println("请求参数："+JSON.toJSONString(map));
-				resultStr = HttpClientUtils.postParameters(url, JSON.toJSONString(map));
-				            HttpClientUtils.postJsonParameters(url, JSON.toJSONString(map));
-				System.out.println("返回结果："+resultStr);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

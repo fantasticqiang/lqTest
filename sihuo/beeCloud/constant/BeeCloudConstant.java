@@ -8,6 +8,11 @@ public class BeeCloudConstant {
 	public static String kj_url_registe = "https://api.beecloud.cn/2/rest/bill"; // 快捷签约地址https://api.beecloud.cn/2/rest/bill
 	
 	/**
+	 * 快捷确认地址
+	 */
+	public static String kj_url_confirm = "https://api.beecloud.cn/2/rest/bill/confirm"; // 快捷签约地址https://api.beecloud.cn/2/rest/bill
+	
+	/**
 	 * 上游平台下发的唯一标识
 	 * 测试：0950c062-5e41-44e3-8f52-f89d8cf2b6eb
 	 */
@@ -35,5 +40,10 @@ public class BeeCloudConstant {
 	 * 手续费
 	 */
 	public static String sxf = "80";
+	
+	/**
+	 * 交易费率
+	 */
+	public static String traderate = "0.006";
 	
 }

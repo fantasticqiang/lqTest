@@ -49,6 +49,16 @@
 		<url-pattern>/QuickPayQueryAllChannelServlet</url-pattern>
 	</servlet-mapping> 
 	
+	<!-- 总的 快捷确认-->
+	<servlet>
+		<servlet-name>QuickPayConfirmServlet</servlet-name>
+		<servlet-class>com.allQuickPay.servlet.QuickPayConfirmServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>QuickPayConfirmServlet</servlet-name>
+		<url-pattern>/QuickPayConfirmServlet</url-pattern>
+	</servlet-mapping> 
+	
 		2.说明
 	
 	(已作废：18.3.1)
@@ -73,6 +83,7 @@
 	###查看商户的状态
 	方法名：QuickPayQueryMerStatusServlet
 	传入参数1：saruLruid （本系统商户id），必填
+	传入参数2：channelID （渠道标识），必填
 	返回参数：是json。
 		resCode"0000"表示审核成功;"0001"审核中;"0002"审核失败;"0003"未开户
 		resMsg表示审核的状态的描述

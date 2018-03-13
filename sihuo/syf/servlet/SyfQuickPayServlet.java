@@ -184,7 +184,7 @@ public class SyfQuickPayServlet extends HttpServlet{
 				//返回页面
 				String payPage = returnMap.getString("payPage");
 				map2app.put("orderNo", orderId);
-				map2app.put("resCode", "000");
+				map2app.put("resCode", "0000");
 				map2app.put("resMsg", "下单成功！");
 				map2app.put("resPage", payPage);
 				out.println(JSON.toJSONString(map2app));
@@ -193,7 +193,7 @@ public class SyfQuickPayServlet extends HttpServlet{
 			}else {
 				response.setContentType("text/html");
 				PrintWriter out = response.getWriter();
-				map2app.put("resCode", "001");
+				map2app.put("resCode", "0001");
 				map2app.put("orderNo", orderId);
 				if (returnMap.containsKey("retMsg")) {
 					map2app.put("resMsg", returnMap.get("retMsg").toString());

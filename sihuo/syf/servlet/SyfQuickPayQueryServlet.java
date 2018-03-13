@@ -98,8 +98,8 @@ public class SyfQuickPayQueryServlet extends HttpServlet{
 			JSONObject returnMap = JSONObject.parseObject(httpMsg.getResBusiMsg());
 			HashMap<String, String> map2app = new HashMap<String,String>();
 			if("S01000000".equals(returnMap.getString("resCode")) && "02".equals(returnMap.getString("status"))){
-				resultMap.put("retCode", "000");
-				resultMap.put("retMsg", "支付成功");
+				resultMap.put("resCode", "0000");
+				resultMap.put("resMsg", "支付成功");
 
 				// 处理重复回调
 				SaruInfoDao saruInfo = new SaruInfoDao();
@@ -159,8 +159,8 @@ public class SyfQuickPayQueryServlet extends HttpServlet{
 			}
 		}else {
 			logger.info("验签失败");
-			resultMap.put("retCode", "9996");
-			resultMap.put("retMsg", "验签失败");
+			resultMap.put("resCode", "9996");
+			resultMap.put("resMsg", "验签失败");
 		}
 		Gson gson = new Gson();
 		String json = gson.toJson(resultMap);

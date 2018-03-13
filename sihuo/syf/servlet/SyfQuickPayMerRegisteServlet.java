@@ -150,8 +150,8 @@ public class SyfQuickPayMerRegisteServlet extends HttpServlet{
 		String retMsg = httpMsg.getResBusiMsg();
 		if(httpMsg.isVerify()){
 			if("S01000000".equals(resCode)){
-				resultMap.put("retCode", "000");
-				resultMap.put("retMsg", retMsg);
+				resultMap.put("resCode", "0000");
+				resultMap.put("resMsg", retMsg);
 				String merId = (String) returnMap.get("merchId");
 				String key = (String) returnMap.get("merchKey");
 				logger.info("获取到的merId"+merId);
@@ -168,12 +168,12 @@ public class SyfQuickPayMerRegisteServlet extends HttpServlet{
 						bankNo, "1", "1", regionId, t0drawFee,
 						t0tradeRate, resCode, retMsg,key,channelID);
 			}else{
-				resultMap.put("retCode", resCode);
-				resultMap.put("retMsg", retMsg);
+				resultMap.put("resCode", resCode);
+				resultMap.put("resMsg", retMsg);
 			}
 		}else{
-			resultMap.put("retCode", resCode);
-			resultMap.put("retMsg", "闪云付快捷商户注册，验签失败");
+			resultMap.put("resCode", resCode);
+			resultMap.put("resMsg", "闪云付快捷商户注册，验签失败");
 		}
 		
 		String json = JSON.toJSONString(resultMap);
